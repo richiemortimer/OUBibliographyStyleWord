@@ -232,6 +232,18 @@
 							<b:ImportantField>
 								<xsl:text>b:Pages</xsl:text>
 							</b:ImportantField>
+							<b:ImportantField>
+								<xsl:text>b:YearAccessed</xsl:text>
+							</b:ImportantField>
+							<b:ImportantField>
+								<xsl:text>b:MonthAccessed</xsl:text>
+							</b:ImportantField>
+							<b:ImportantField>
+								<xsl:text>b:DayAccessed</xsl:text>
+							</b:ImportantField>
+							<b:ImportantField>
+								<xsl:text>b:URL</xsl:text>
+							</b:ImportantField>
 						</xsl:when>
 
 						<xsl:when test="b:GetImportantFields/b:SourceType='ArticleInAPeriodical'">
@@ -2153,9 +2165,11 @@
 		<xsl:variable name="cYearAccessed">
 			<xsl:value-of select="count(b:YearAccessed)"/>
 		</xsl:variable>
+		<xsl:call-template name ="templ_prop_Space"/>
 		<xsl:call-template name ="templ_prop_SecondaryOpen"/>
 		<xsl:call-template name ="templ_str_OnlineCap"/>
 		<xsl:call-template name ="templ_prop_SecondaryClose"/>
+		<xsl:call-template name ="templ_prop_Dot"/>
 		<xsl:choose>
 			<xsl:when test="$cURL!=0 or $cYearAccessed!=0">
 				<xsl:call-template name ="templ_prop_Space"/>
@@ -2167,11 +2181,13 @@
 	</xsl:template>
 	
 	<xsl:template name ="BibDisplayMedium">
+			<xsl:call-template name ="templ_prop_Space"/>
 			<xsl:call-template name ="templ_prop_SecondaryOpen"/>
 			<xsl:call-template name="right-trim">
 				<xsl:with-param name ="s" select="b:Medium"/>
 			</xsl:call-template>
 			<xsl:call-template name ="templ_prop_SecondaryClose"/>
+			<xsl:call-template name ="templ_prop_Dot"/>
 	</xsl:template>
 	
 	<!-- RM 2020 -->
@@ -2180,6 +2196,7 @@
 			<xsl:call-template name ="templ_prop_ListSeparator"/>
 			<xsl:call-template name ="templ_prop_Space"/>
 	      <xsl:value-of select="b:InternetSiteTitle"/>
+		  <xsl:call-template name ="templ_prop_Dot"/>
 		</xsl:if>
 	</xsl:template>
 
@@ -5000,10 +5017,12 @@
 			<xsl:value-of select="count(b:Title)"/>
 		</xsl:variable>
 		<xsl:if test ="$cTitle!=0">
+			<!--<xsl:call-template name ="templ_prop_SimpleQuote"/>-->
 			<xsl:call-template name="right-trim">
 				<xsl:with-param name ="s" select="b:Title"/>
 			</xsl:call-template>
 			<xsl:call-template name ="templ_prop_Dot"/>
+			<!--<xsl:call-template name ="templ_prop_SimpleQuote"/>-->
 			<xsl:call-template name ="templ_prop_Space"/>
 		</xsl:if>
 	</xsl:template>
@@ -5018,7 +5037,6 @@
 				<xsl:with-param name ="s" select="b:Title"/>
 			</xsl:call-template>
 			<xsl:call-template name ="templ_prop_SimpleQuote"/>
-			<xsl:call-template name ="templ_prop_Space"/>
 		</xsl:if>
 	</xsl:template>
 
@@ -5172,8 +5190,8 @@
 		</xsl:choose>
 		<xsl:choose>
 			<xsl:when test ="$cCity!=0 or $cState!=0">
-				<!--<xsl:call-template name ="templ_prop_EnumSeparator"/>-->
-				<xsl:call-template name ="templ_prop_ListSeparator"/>
+				<xsl:call-template name ="templ_prop_EnumSeparator"/>
+				<!--<xsl:call-template name ="templ_prop_ListSeparator"/>-->
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:call-template name ="templ_prop_Enum"/>
@@ -5355,6 +5373,7 @@
 					<xsl:call-template name ="templ_str_AccessedCap"/>
 				</xsl:variable>
 				<xsl:variable name ="prop_Space">
+					<xsl:text>:</xsl:text>
 					<xsl:call-template name ="templ_prop_Space"/>
 				</xsl:variable>
 				<xsl:choose>
@@ -5569,7 +5588,7 @@
 						<i>
 							<xsl:call-template name ="BibDisplayTitle"/>
 						</i>
-						<xsl:call-template name ="BibDisplayStrOnline"/>
+						<!--<xsl:call-template name ="BibDisplayStrOnline"/>-->
 						<xsl:call-template name ="BibDisplayURL"/>
 						<xsl:call-template name ="BibDisplayAccessedDates"/>
 					</xsl:element>
@@ -5582,6 +5601,9 @@
 						<i>
 							<xsl:call-template name ="BibDisplayDocTitle"/>
 						</i>
+						<i>
+							<xsl:call-template name ="BibDisplayInternetSiteTitle"/>
+						</i>
 						<xsl:variable name="cMedium">
 							<xsl:value-of select="count(b:Medium)"/>
 						</xsl:variable>
@@ -5589,14 +5611,10 @@
 							<xsl:when test="$cMedium!=0">
 								<xsl:call-template name ="BibDisplayMedium"/>
 							</xsl:when>
-							<xsl:otherwise>
+							<!--<xsl:otherwise>
 								<xsl:call-template name ="BibDisplayStrOnline"/>
-							</xsl:otherwise>
+							</xsl:otherwise>-->
 						</xsl:choose>
-						
-						<i>
-							<xsl:call-template name ="BibDisplayInternetSiteTitle"/>
-						</i>
 						<xsl:call-template name ="BibDisplayURL"/>
 						<xsl:call-template name ="BibDisplayAccessedDates"/>
 					</xsl:element>
@@ -5607,6 +5625,7 @@
 						<xsl:call-template name = "BibDisplayAuthor">
 							<xsl:with-param name ="DisplayEditorIfAuthorUnavailale" select="'true'" />
 						</xsl:call-template>
+						
 						<xsl:call-template name = "BibDisplayYear"/>
 						<xsl:call-template name = "BibDisplayTitle"/>
 						<i>
@@ -5614,6 +5633,8 @@
 						</i>
 						<xsl:call-template name ="BibDisplayVolumeIssueJA"/>
 						<xsl:call-template name ="BibDisplayPages"/>
+						<xsl:call-template name ="BibDisplayURL"/>
+						<xsl:call-template name ="BibDisplayAccessedDates"/>
 					</xsl:element>
 				</xsl:when>
 				<xsl:when test="$SourceType = 'ArticleInAPeriodical'">
